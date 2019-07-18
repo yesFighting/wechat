@@ -1,0 +1,49 @@
+/*  */
+.content{
+    margin-top:15px;
+    /* background: #fff; */
+}
+.content .itme-1,.content .itme-2{
+    width: 100%;
+}
+.content >.itme-2,.content >.itme-3{
+     margin-top:5px ;
+}
+
+.content >.itme-2 span:nth-child(2){
+    width: 20px;
+    height:20px;
+    /* background: url(../static/images/arrow_r.png)no-repeat; */
+}
+.content ul li{
+    /* border-top: 1px solid rgb(228,228,228); */
+}
+.content ul li{
+    /* border-bottom: 1px solid rgba(228,228,228,.6); */
+    padding: 0.125rem 0;
+}
+.content ul li>a{
+    width: 100%;
+    
+    align-items: center;
+    padding-left: 1.6rem
+}
+.content ul li>a a{
+    display: flex
+}
+.content ul li .title1{
+    width: 20px;
+    height: 20px;
+    margin-left: -.866667rem;
+    margin-right: .266667rem;
+    display: flex;
+    align-items: center;
+}
+.content ul li .title2{
+    width: 100%;
+    padding: .433333rem .666667rem .433333rem 0;
+    font-size: 0.7rem;
+    color: #333;
+    display: flex;
+    justify-content: space-between;
+}
