@@ -6,12 +6,38 @@
             :collapse="isCollapse"
             :default-openeds="['1','2']"
             :show-timeout="200"
-           
+           default-active="$route.path"
             router
             :background-color="menuObj.bgColor"
             :text-color="menuObj.textColor"
             :active-text-color="menuObj.activeTextColor"
             :style="{'width':sidebar.width}">
+            <template v-for="(item,index) in permission_routers" v-if="!item.hidden && item.children" >
+
+              <router-link v-if="item.children.length === 1 && !item.children[0].length" :to="item.path+'/'+item.children[0].path" :key="index">
+                <el-menu-item :index="item.path+'/'+item.children[0].path" class="class='submenu-title-noDropdown">
+                   <i class="el-icon-message"></i>
+                  <span v-if="item.children[0].meta&&item.children[0].meta.title">{{item.children[0].meta.title}}</span>
+                </el-menu-item>
+              </router-link>
+
+              <el-submenu v-else :index="item.name||item.path" :key="item.name">
+                <template slot="title">
+                   <i class="el-icon-message"></i>
+                  <span v-if="item.meta && item.meta.title">{{item.meta.title}}</span>
+                </template>
+
+                <template v-for="(child, index) in item.children" v-if="!child.hidden" >
+                  <sidebar-item class="nest-menu" v-if="child.children&&child.children.length>0" :routes="[child]" :key="index"></sidebar-item>
+                  <router-link  :to="item.path+'/'+child.path" :key="child.name">
+                    <el-menu-item :index="item.path+'/'+child.path">
+                     
+                      <span v-if="child.meta&&child.meta.title">{{child.meta.title}}</span>
+                    </el-menu-item>
+                  </router-link>
+                </template>
+              </el-submenu>
+            </template>
               <!-- :default-active="$route.path" -->
                 <!-- <template v-for="(item,index) in permission_routers"> -->
                     <!--表示 有一级菜单-->
@@ -40,7 +66,7 @@
                         </router-link>
                     </el-submenu>
                 </template> -->
-        <el-submenu index="1">
+        <!-- <el-submenu index="1">
           <template slot="title">
             <i class="el-icon-message"></i>基本信息
           </template>
@@ -103,7 +129,7 @@
             <el-menu-item index="/administrator/administrator">管理员列表</el-menu-item>
             
           </el-menu-item-group>
-        </el-submenu>
+        </el-submenu> -->
         </el-menu>
     </div>
 </template>
@@ -123,11 +149,13 @@ export default {
     },
     mounted(){
     //   this.setMenuHeight();
+    
     },
     computed:{
       ...mapGetters([
         'sidebar',
-        'isCollapse'
+        'isCollapse',
+        'permission_routers'
       ])
     },
     methods: {
@@ -153,7 +181,7 @@ export default {
       background-color: $left-bgColor;
       z-index: 99;
       overflow-y: scroll;
-      height: 100vh;
+      height: 90vh;
   }
   .fa-margin {
     margin-right: 5px;

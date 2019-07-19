@@ -6,15 +6,15 @@
                 <el-form class="rflex">
                     <div class="wflex rflex">
                     <el-form-item label="">
-                    <el-input style="width:220px"  placeholder="用户名" ></el-input> &nbsp;&nbsp;
-                     <el-button type="primary" size ="mini" icon="search" > 筛选</el-button>
+                    <el-input v-model="loopType" style="width:220px"  placeholder="用户名" ></el-input> &nbsp;&nbsp;
+                     <el-button @click="lookup()" type="primary" size ="mini" icon="search" > 筛选</el-button>
                     </el-form-item>
                    
                     </div>
                     <el-form-item class="btnRight">
                         <el-button @click="delGroup" type="primary" size ="mini" icon="view" >批量删除</el-button>
                         <!-- <el-button type="success" size ="mini" icon="view">导出Elcel</el-button> -->
-                        <el-button @click="showAddFundDialog('add')" type="primary" size ="mini" icon="view">添加</el-button>
+                        <el-button v-if="hasPerm('imgAdmin:add')" @click="showAddFundDialog('add')" type="primary" size ="mini" icon="view">添加</el-button>
                     </el-form-item>
                 </el-form>
             </div>
@@ -60,7 +60,6 @@
                 align='center'
                 width="180"
                 
-                
               >
             </el-table-column>
             <el-table-column
@@ -73,7 +72,6 @@
                     <span style="color:#00d053"></span>
                 </template>
             </el-table-column>
-           
             <el-table-column
                 prop="operation"
                 align='center'
@@ -95,7 +93,6 @@
                 </template>
             </el-table-column>
             </el-table>
-           
             <addFundDialog  v-if="addFundDialog.show" :isShow="addFundDialog.show" :dialogRow="addFundDialog.dialogRow"  @getFundList="imgLists()"  @closeDialog="hideAddFundDialog"></addFundDialog>
              <paging  :pageTotal="pageTotal" @handleCurrentChange="handleCurrentChange" @handleSizeChange="handleSizeChange"></paging>
         </div>
@@ -112,9 +109,7 @@
         inject: ['reload'],
         data(){
             return{
-                items:{
-
-                },
+                loopType:'',
                 tableHeight:0,
                 idFlag:false,
                 isShow:false, // 是否显示modal,默认为false
@@ -127,8 +122,8 @@
                     dialogRow:{}
                 },
                 incomePayData:{
-                    page:1,
-                    limit:20,
+                    pageIndex:1,
+                    pageSize:20,
                     name:''
                 },
                 pageTotal:1,
@@ -146,14 +141,23 @@
                this.setTableHeight(); 
             };
            this.imgLists()
+        //    console.log(this.hasPerm('article:add'))
         },
        
         methods:{
              // 列表数据
             imgLists(){
-                imgList().then(res=>{
-                    this.tableData = res.data;
+                 const para = Object.assign({},this.incomePayData);
+                imgList(para).then(res=>{
+                    this.pageTotal = res.data.count
+                    this.tableData = res.data.data;
                     console.log(res.data)
+                })
+            },
+            //查找
+            lookup(){
+                this.$http.post('/api/img/lookup',{type:this.loopType}).then(res=>{
+                    console.log(res)
                 })
             },
              // 编辑操作方法
@@ -175,10 +179,7 @@
                             })
                         this.imgLists()
                          })
-                        
                     })
-                
-               
             },
             //批量删除
             delGroup(){
@@ -199,8 +200,6 @@
                             this.imgLists()
                             })
                          })
-                   
-               
                 alert('点击了批量删除'+JSON.stringify(this.rowIds))
             },
             
@@ -221,11 +220,13 @@
             //分页
             handleCurrentChange(val){
                  this.incomePayData.page = val;
+                 this.imgLists()
                  //数据列表
             },
             // 每页显示多少条
             handleSizeChange(val){
                 this.incomePayData.limit = val;
+                 this.imgLists()
                 //数据列表
             },
                 //表格底部跟随

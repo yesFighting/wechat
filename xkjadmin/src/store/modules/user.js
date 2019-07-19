@@ -33,7 +33,10 @@ const user = {
         [types.SET_TOKEN](state,token){
             state.token = token;
         },
-        SET_ROLES:(state,userInfo)=>{
+        GAI_ROLES:(state,str)=>{
+            state.role = str;
+        },
+        [types.SET_ROLES](state,userInfo){
             //state.roles = userInfo;
             state.nickname = userInfo.nickname;
             state.userId = userInfo.userId;
@@ -63,32 +66,13 @@ const user = {
 
         // 根据token获取用户信息
         GetInfo({ commit, state}){
-            // return new Promise((resolve, reject)=>{
-            //     getInfo().then(response => {
-            //         // console.log(response)
-            //         //obj
-            //         // if(data.userPermission && data.userPermission.length > 0){ //验证返回的是否是一个空数组
-            //             commit('SET_ROLES' , response.data.userPermission.menuList)  // []
-            //              //cookie保存登录状态,仅靠vuex保存的话,页面刷新就会丢失登录状态
-            //             //  setToken();
-            //             let data = response.data 
-            //             store.dispatch('GenerateRoutes',data.userPermission).then(()=>{
-            //                   //生成该用户的新路由json操作完毕之后,调用vue-router的动态新增路由方法,将新路由添加
-            //                   router.addRoutes(store.getters.addRouters)
-            //             })
-            //             resolve(data)
-            //        // }
-            //     }).catch(err=>{
-            //         reject(err)
-            //     })
-            // })
-
+            
             return new Promise((resolve, reject) => {
                 getInfo().then(response => {
                   //储存用户信息
-                  commit('SET_ROLES', response.data.userPermission);
-                  //cookie保存登录状态,仅靠vuex保存的话,页面刷新就会丢失登录状态
-                  setToken();
+                  commit(types.SET_ROLES, response.data.userPermission);
+                //   //cookie保存登录状态,仅靠vuex保存的话,页面刷新就会丢失登录状态
+                //   setToken();
                   //生成路由
                   let userPermission =response.data.userPermission ;
                   store.dispatch('GenerateRoutes', userPermission).then(() => {
@@ -107,6 +91,7 @@ const user = {
                 console.log()
                 commit(types.SET_TOKEN,'');
                 removeToken();
+                commit('GAI_ROLES','')
                 resolve()
             })
         }

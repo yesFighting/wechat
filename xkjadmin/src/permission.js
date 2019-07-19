@@ -2,27 +2,27 @@ import router from './router'
 import { getInfo } from '../src/config/api'
  import store from './store'
 import { getToken } from '@/config/auth' // 验权(从cookie中获取)
+import NProgress from 'nprogress' // Progress 进度条
+import 'nprogress/nprogress.css' // Progress 进度条样式
 
 const whiteList = ['/login','/404'] // 不重定向白名单
 
 router.beforeEach((to, from ,next) => {
-  
+    NProgress.start()
     // if (!to.meta.isPublic && !getToken()) {
     //   return next('/login')
     // }
     if(getToken()){
 
       if(to.path === '/login'){
-        next({path: '/systemcont'}) //重定向到首页
-        
+        next({path: '/'}) //重定向到首页
+        NProgress.done() // 结束Progress
+
       }else if(!store.getters.role){
+        console.log(store.getters.role)
         store.dispatch('GetInfo').then(()=>{
-        
            next({...to})
-        //  store.dispatch('GenerateRoutes', { role }).then(() => { // 根据roles权限生成可访问的路由表
-        //     router.addRoutes(store.getters.addRouters) // 动态添加可访问权限路由表
-        //     next({ ...to, replace: true }) // hack方法 确保addRoutes已完成
-        //   })
+       
         })
 
       }else{
@@ -36,9 +36,10 @@ router.beforeEach((to, from ,next) => {
     }else{
       //如果路径不是白名单内的,而且又没有登录,就跳转登录页面
       next('/login')
+      NProgress.done() // 结束Progress
     }
   })
 
   router.afterEach(() => {
-  
+    NProgress.done() // 结束Progress
   })

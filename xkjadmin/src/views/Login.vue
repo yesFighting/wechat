@@ -66,7 +66,7 @@ export default {
 		this.$refs[Form].validate((valid)=>{  //validate from表单验证
 			
 			this.$store.dispatch('forlogin',this.Form).then(res=>{
-				this.$router.push({ path: '/systemcont' })
+				this.$router.push({ path: 'index' })
 			}).catch(err=>{
 				console.log(err)
 			})

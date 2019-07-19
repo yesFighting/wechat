@@ -140,6 +140,14 @@ router.post('/img/edit/:id', async (req, res)=>{
   const mitiPages = await mitiPage.findByIdAndUpdate(req.params.id, req.body)
   res.send(mitiPages);
 })
+//图片管理查找
+router.post('/img/lookup', async (req, res)=>{
+  let { type } = req.body
+  const mitiPages = await mitiPage.findOne({
+    type
+  })
+  res.send(mitiPages);
+})
 //图片管理删除
 router.post('/img/delete/:id', async (req, res)=>{
   const mitiPages = await mitiPage.findByIdAndDelete(req.params.id, req.body)
@@ -155,28 +163,41 @@ router.post(`/img/deleteAll`, async (req, res)=>{
   });
 })
 //图片管理列表
-router.get('/img/list',  async(req, res)=>{
-  const mitiPages = await mitiPage.find().limit(100)
-  res.send(mitiPages);
-//   const myCustomLabels = {
-//   totalDocs: 5,
-//   docs: await mitiPage.find(),
-//   limit: 10,
-//   page: 1,
-//   nextPage: 'next',
-//   prevPage: 'prev',
-//   totalPages: 3,
-//   pagingCounter: 'slNo',
-//   meta: 'paginator'
-// };
-//   const options = {
-//     page: 1,
-//     limit: 10,
-//     customLabels: myCustomLabels
-//   };
-//     await mitiPage.paginate({}, options, function(err, result) {
-//     console.log(result)
-//   })
+const execCallback = function(p,err,data,res){
+  if(err){
+    res.send(err);
+ }else{
+   //再次查询，获取总数
+   p.find().count((err,result) => {
+     if (err) {
+       res.send({'status':0,'data':'','message':err,'count':''});  
+     } else {
+       res.send({'status':1,'data':data,'message':'success','count':result});  
+     }
+     });
+ }
+}
+
+router.post('/img/list',  (req, res)=>{
+  // const mitiPages =  mitiPage.find().limit(100)
+  // res.send(mitiPages);
+  console.log('into getMoneyIncomePay');
+  const pageIndex = parseInt(req.query.pageIndex);
+  const pageSize = parseInt(req.query.pageSize);
+  const m =  mitiPage.find({});
+  let p =  mitiPage;
+  const start =  (pageIndex-1)*pageSize;
+  //暂时没有用到
+	if(req.query.where){
+		p.find(where);
+  }
+  m.skip(start); 
+	m.limit(pageSize);
+	m.sort({'createTime':'desc'}); //排序[asc表示升序，desc表示降序]
+	m.exec(function(err,data){
+    console.log(data)
+		execCallback(p,err,data,res)
+	})
 })
 
   //返回测试登录信息
@@ -184,17 +205,37 @@ router.get('/img/list',  async(req, res)=>{
     const infos  = await info.create({
       userPermission:{
         menuList:[
-            'role',
-            'user',
-            'article'       
+            'systemcont',
+            'imgAdmin',
+            'filterT',
+            'publicMenu',
+             'addReply',
+            'replyList',
+            'follList',
+            'userList',
+            'memberList',
+            'commentList',
+            'hidderList',
+            'CBorderList',
+            'COlistStatistics',
+            'RAconfig',
+            'QRcode',
+            'QRcodeList',
+            'addStaffCode',
+            'staffCodeList',
+            'detailsList',
+            'storeStatistics',
+            'employeeStatistics',
+            'administrator',
+            'adminstratorChK'
         ],
         roleId:1,
-        nickname:'超级管理员',
-        roleName:'管理员',
+        nickname:'edit',
+        roleName:'edit',
         permissionList:[
-            'article:list',
-            'article:add',
-            'user:list'
+            'imgAdmin:list',
+            'imgAdmin:add',
+          
           ],
         userId:10003
     }

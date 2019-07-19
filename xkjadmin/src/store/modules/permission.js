@@ -11,7 +11,8 @@ function hasPermission(menus,route){
         /*
         * 如果这个路由有menu属性,就需要判断用户是否拥有此menu权限
         */
-       return menus.indexOf(route.menu) > -1;
+        return menus.indexOf(route.menu) > -1;
+    //    return menus.some(role => route.menus.indexOf(role) >= 0)
     }else{
         return true
     }
@@ -30,7 +31,7 @@ function filterAsyncRouter(asyncRouterMap, menus){
                 //如果这个路由下面还有一级的话，就递归调用
                 route.children = filterAsyncRouter(route.children, menus)
                 //如果过滤一圈后，没有子元素了，这个父级菜单也不显示了
-                return (route.children && route.children.length)
+              return (route.children && route.children.length)
             }
             return true
         }
@@ -71,6 +72,7 @@ const permission = {
                 }else{
                     //否则需要通过以下方法来筛选出本角色可用的路由
                     accessedRouters = filterAsyncRouter(asyncRouterMap, menus)
+                    console.log(accessedRouters)
                 }
                 //提交
                 commit('SET_ROUTERS', accessedRouters)

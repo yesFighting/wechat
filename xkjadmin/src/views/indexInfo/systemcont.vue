@@ -6,30 +6,30 @@
            <div class="area">
              <p class="title"><i class="fa fa-edit"></i>修改系统属性信息</p>
                      
-            <el-form class="form"  ref="infoForm" label-width="120px">
+            <el-form class="form" :model="formData"  ref="formData" :rules="rules" label-width="120px">
                     
-                <el-form-item label="企业号appid">
-                    <el-input  size="mini"  placeholder="企业号appid"></el-input>
+                <el-form-item label="企业号appid" prop="appid">
+                    <el-input v-model="formData.appid"  size="mini"  placeholder="企业号appid"></el-input>
                 </el-form-item>
-                <el-form-item label="企业号secret:" prop="nickname">
-                    <el-input  size="mini" placeholder="企业号secret"></el-input>
+                <el-form-item label="企业号secret:" prop="secet">
+                    <el-input v-model="formData.secet"  size="mini" placeholder="企业号secret"></el-input>
                 </el-form-item>
                
-                 <el-form-item label="评论积分:" prop="email">
-                    <el-input size="mini" placeholder="评论积分"></el-input>
+                 <el-form-item label="评论积分:" prop="plun">
+                    <el-input v-model="formData.plun" size="mini" placeholder="评论积分"></el-input>
                 </el-form-item>
-                <el-form-item label="签到积分:" prop="telphone">
-                    <el-input  size="mini" placeholder="签到积分"></el-input>
+                <el-form-item label="签到积分:" prop="qdao">
+                    <el-input v-model="formData.qdao"  size="mini" placeholder="签到积分"></el-input>
                 </el-form-item>
-                 <el-form-item label="自动审核时间(s):" prop="telphone">
-                    <el-input  size="mini" placeholder="自动审核时间"></el-input>
+                 <el-form-item label="自动审核时间(s):" prop="zdDate">
+                    <el-input v-model="formData.zdDate"  size="mini" placeholder="自动审核时间"></el-input>
                 </el-form-item>
-                 <el-form-item label="客服电话:" prop="telphone">
-                    <el-input  size="mini" placeholder="客服电话"></el-input>
+                 <el-form-item label="客服电话:" prop="phone">
+                    <el-input v-model="formData.phone"  size="mini" placeholder="客服电话"></el-input>
                 </el-form-item>
-                <el-form-item>
-                    <el-button type="primary">确定</el-button>
-                    <el-button >重置</el-button>
+                <el-form-item >
+                    <el-button @click="submit('formData')" type="primary">确定</el-button>
+                    <el-button @click="reset()" >重置</el-button>
                 </el-form-item>
                 
             </el-form>
@@ -47,20 +47,45 @@
 export default {
      data() {
       return {
-        form: {
-          name: '',
-          region: '',
-          date1: '',
-          date2: '',
-          delivery: false,
-          type: [],
-          resource: '',
-          desc: ''
-        }}
+        formData: {
+            appid:'',
+            secet:'',
+            plun:'',
+            qdao:'',
+            zdDate:'',
+            phone:''
+        },
+        rules:{
+            appid:[
+                {required: true, message : 'appid不能为空！',trigger : 'blur'}
+            ],
+            secet:[
+                {required: true, message : 'secet不能为空！',trigger : 'blur'}
+            ]
+        }
+       }
     },
     methods:{
-        save(){
-            
+        submit(formData){
+            this.$refs[formData].validate((valid)=>{
+                if(valid){
+                    console.log(valid)
+                }else{
+
+                }
+            })
+        },
+        //
+        reset(){
+            this.formData= {
+                appid:'',
+                secet:'',
+                plun:'',
+                qdao:'',
+                zdDate:'',
+                phone:''
+            }
+        // this.formData = Object.assign({},formData2);
         }
     },
     mounted(){

@@ -4,9 +4,11 @@ import router from "./router/index.js";
 import store from "./store/";
 import './plugins/element.js'
 import '@/permission' // permission control
+import { hasPermission } from './config/hasPermission'
 
 import http from 'axios'
 Vue.prototype.$http =http;
+Vue.prototype.hasPerm = hasPermission
 
 Vue.config.productionTip = false;
 //全局注册

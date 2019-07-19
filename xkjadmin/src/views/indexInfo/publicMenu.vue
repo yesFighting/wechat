@@ -87,7 +87,7 @@
                 </tr>
 
                  <!--child start -->
-                    <tr class="he" v-for="(item,index) in childitems.parent1" :key="index">
+                <tr  class="he" v-for="(item,index) in childitems.parent1" :key="index" ref="cindex">
                     <td class="he td-p">
                         <label style="color:#ccc">|—</label>&nbsp;
                          <input style="width:45%;padding:3px" class="inp"/>
@@ -100,7 +100,7 @@
 
                     </td>
                     <td class="he">
-                        <el-button @click="childitems.parent1.splice(index,1)" type="danger" size="mini">删除</el-button>
+                        <el-button @click="detlete(index)" type="danger" size="mini">删除</el-button>
                     </td>
                 </tr>
                 <!-- end -->
@@ -244,6 +244,14 @@ export default {
     methods:{
         save(){
             alert('您点击了保存')
+        },
+        detlete(index){
+            // this.childitems.parent1.splice(index,1)
+          
+            this.$nextTick(()=>{
+                this.childitems.parent1.splice(index,1)
+                // this.$refs.cindex[index].remove();
+            })
         },
         childitem(num){
             if(num === 1){

@@ -21,7 +21,7 @@ export const imgInit = params =>{
 }
 //图片管理列表
 export const imgList = params =>{
-    return httpRequest.httpRequest(`/api/img/list`,params,'get');
+    return httpRequest.httpRequest(`/api/img/list`,params,'post');
 }
 //图片管理编辑
 export const imgListEdit = params =>{

@@ -8,7 +8,6 @@
         width=""
         @close="closeDialog">
         <div class="form">
-             <!-- :rules="form_rules" -->
             <el-form 
                 ref="form" 
                 :model="form"
@@ -16,12 +15,9 @@
                 :label-width="dialog.formLabelWidth"
                 style="margin:10px;width:auto;">
                 <!-- :label-width="dialog.width"  -->
-
                 <el-form-item prop='type' label="图片类别名称:">
-
                     <el-input :style="{'width':dialog.inputwidth}" type="text" v-model="form.type"></el-input>
                 </el-form-item>
-
                 <el-form-item prop='income'  label="">
                     <div class="parentdiv">
                         <div class="child1"><img src=""/></div>
@@ -31,12 +27,10 @@
                         </div>
                     </div>
                 </el-form-item>
-                
                 <el-form-item  class="text_right">
                     <el-button size="small" @click="isVisible = false">取 消</el-button>
                     <el-button size="small" type="primary" @click='onSubmit("form")'>提  交</el-button>
                 </el-form-item>
-                
             </el-form>
         </div>
     </el-dialog>
@@ -46,32 +40,30 @@
 import { mapState, mapGetters } from 'vuex'
  import { imgInit, imgListEdit } from '../../../config/api'
 export default {
-     name:'addFundDialogs',
-      inject: ['reload'],   //注入全局方法
+    name:'addFundDialogs',
+    inject: ['reload'],   //注入全局方法
     data(){
         let validateData = (rule, value, callback) => {
-            if(value === ''){
+            if(value == ''){   
                 let text;
-               if(rule.field === 'type'){
+               if(rule.field == 'type'){
                    text = 'img类型'
+                    callback(new Error(text+'不能为空~'));
                }
-                callback(new Error(text+'不能为空~'));
             }else{
                     callback();
                 }
             }
-        
         return{
             textarea:'',
             isVisible: this.isShow,
             form:{
-                
+                type:''
             },
             form_rules: {
                 type   : [
                     { required: true, validator:validateData,trigger: 'blur'},
                 ],
-               
             },
             //详情弹框信息
             dialog: {
@@ -97,15 +89,13 @@ export default {
             }else{
                 // this.$refs['form'].resetFields()
             }
-
       },
       methods:{
         closeDialog(){
-              this.$emit('closeDialog');
-          },
-         
+            this.$emit('closeDialog');  
+        },
            //表单提交
-          onSubmit(form){
+        onSubmit(form){
             this.$refs[form].validate((valid) => {
                 if (valid) {//表单数据验证完成之后，提交数据;
                     let formData = this[form];
@@ -120,9 +110,8 @@ export default {
                             this.$refs['form'].resetFields()
                             this.isVisible = false
                             this.$emit('getFundList'); 
-                       })
+                        })
                     }else{
-                      
                     imgInit(this.form).then(res=>{
                         console.log(res)
                         this.$message({
@@ -137,7 +126,7 @@ export default {
                     }
                 }
             })
-          },
+        },
       }
 }
 </script>
