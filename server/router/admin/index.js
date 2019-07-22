@@ -27,13 +27,13 @@ module.exports = app =>{
   })
     //回复列表编辑
     router.post('/news/edit/:id', async(req, res)=>{
-      console.log(req.params.id)
+     
       const newss = await newsgrod.findByIdAndUpdate(req.params.id, req.body);
       res.send(newss)
     })
      //回复列表编辑回显
      router.get('/news/list/:id', async(req, res)=>{
-      console.log(req.params.id)
+     
       const newss = await newsgrod.findById(req.params.id);
       res.send(newss)
     })
@@ -56,7 +56,7 @@ module.exports = app =>{
   })
   //回复列表
   router.post('/news/list',async(req,res)=>{
-    console.log(req.Model.modelName)
+ 
     const model = await news.create(req.body)
     res.send(model)
 })
@@ -94,7 +94,7 @@ router.get('/c/init', async (req, res) => {
 
 //优惠券接口
 router.post('/list/coupon', async (req, res)=>{
-  console.log(req.query);
+  
   const  coupon = await many.create({
     yesMany:[{state:1,many :50, num:200},{state:1,many :10, num:50,}],
     onMany:[{state:1,many :50, num:200}],
@@ -168,10 +168,11 @@ const execCallback = function(p,err,data,res){
     res.send(err);
  }else{
    //再次查询，获取总数
-   p.find().count((err,result) => {
+   p.find().estimatedDocumentCount((err,result) => {
      if (err) {
        res.send({'status':0,'data':'','message':err,'count':''});  
      } else {
+       console.log()
        res.send({'status':1,'data':data,'message':'success','count':result});  
      }
      });
@@ -181,9 +182,9 @@ const execCallback = function(p,err,data,res){
 router.post('/img/list',  (req, res)=>{
   // const mitiPages =  mitiPage.find().limit(100)
   // res.send(mitiPages);
-  console.log('into getMoneyIncomePay');
-  const pageIndex = parseInt(req.query.pageIndex);
-  const pageSize = parseInt(req.query.pageSize);
+  const pageIndex = parseInt(req.body.page);
+  const pageSize = parseInt(req.body.limit);
+  console.log(pageIndex,pageSize)
   const m =  mitiPage.find({});
   let p =  mitiPage;
   const start =  (pageIndex-1)*pageSize;
@@ -195,7 +196,7 @@ router.post('/img/list',  (req, res)=>{
 	m.limit(pageSize);
 	m.sort({'createTime':'desc'}); //排序[asc表示升序，desc表示降序]
 	m.exec(function(err,data){
-    console.log(data)
+  
 		execCallback(p,err,data,res)
 	})
 })
@@ -271,7 +272,6 @@ const multer = require('multer')
 const upload = multer({ dest: __dirname + '/../../uploads' }) // __dirname 表示当前所在文件夹
 router.post('/upload',upload.single('file'), async(req, res)=>{
   const file = req.file
-  console.log(file)
   file.url = `http://localhost:3000/uploads/${file.filename}`
   res.send(file)
 })

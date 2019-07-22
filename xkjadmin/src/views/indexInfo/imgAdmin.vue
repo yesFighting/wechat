@@ -122,8 +122,8 @@
                     dialogRow:{}
                 },
                 incomePayData:{
-                    pageIndex:1,
-                    pageSize:20,
+                    page:1,
+                    limit:20,
                     name:''
                 },
                 pageTotal:1,
@@ -147,6 +147,7 @@
         methods:{
              // 列表数据
             imgLists(){
+                
                  const para = Object.assign({},this.incomePayData);
                 imgList(para).then(res=>{
                     this.pageTotal = res.data.count
