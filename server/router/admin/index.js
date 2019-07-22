@@ -180,8 +180,7 @@ const execCallback = function(p,err,data,res){
 }
 
 router.post('/img/list',  (req, res)=>{
-  // const mitiPages =  mitiPage.find().limit(100)
-  // res.send(mitiPages);
+  
   const pageIndex = parseInt(req.body.page);
   const pageSize = parseInt(req.body.limit);
   console.log(pageIndex,pageSize)

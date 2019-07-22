@@ -184,7 +184,6 @@
             },
             //批量删除
             delGroup(){
-              
                 this.multipleSelection.forEach((item,index,obj)=>{
                     this.rowIds.push( obj[index]._id);  //拿到所有id
                 })
